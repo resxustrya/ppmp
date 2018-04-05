@@ -1,0 +1,621 @@
+<?php $__env->startSection('content'); ?>
+<section class="content" style="padding: 7px;" id="get_expense" data-expense="<?php echo asset('get/expense'); ?>">
+    <ul  style="text-decorration :none;" class="timeline">
+    
+        <li class="time-label">
+            <span class="bg-green">
+                I. OFFICE SUPPLIES
+            </span>
+        </li>
+        <li>
+            <div class="timeline-item">
+                <h3 class="timeline-header"><a href="javascript:void(0);">A. COMMON-USE/REGULAR/STANDARD OFFICE SUPPLIES</a></h3>
+                <div class="timeline-body">
+                    <ul id="get_section" data-section="<?php echo asset('get/sections'); ?>">
+                        <li><strong>1. CONSUMABLE</strong>
+                            <ul>
+                                <li><strong>a. PER EMPLOYEE</strong><span> (You can only change the quantity in this items)</span>
+                                    <div class="table_con">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Item Description / General Description</th>
+                                                    <th width="5px">Unit</th>
+                                                    <th width="7px">Unit Cost</th>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                        <th width="7px"><?php echo $section->short; ?></th>
+                                                    <?php endforeach; ?>
+                                                    <th width="7px">Total Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach(DB::table('table_a')->where('created_by','=','8888')->orderBy('item','ASC')->get() as $item): ?>
+                                                <?php $total = 0; $total_amt = 0; ?>
+                                                <tr>
+                                                    <td><?php echo $item->item; ?></td>
+                                                    <td><?php echo $item->unit; ?></td>
+                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                    <?php $quantity = DB::table('table_a')
+                                                                                ->where('item','=',$item->item)
+                                                                                ->where('created_by','=',$section->id)
+                                                                                ->first();
+        
+                                                    ?>
+                                                    <?php if(isset($quantity) AND $quantity->quantity != 0): ?>
+                                                        <?php $total += $quantity->quantity; ?>
+                                                        <?php $total_amt += $total * $item->amount; ?>            
+                                                        <td><?php echo number_format($quantity->quantity); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>
+                                                    
+                                                    <?php endforeach; ?>
+                                                    <?php if(isset($total) and $total > 0): ?>
+                                                        <td><?php echo number_format($total); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>    
+                                                    <?php endif; ?>
+                                                   
+                                                </tr>    
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </li>
+                                <li><strong>b. PER SECTION</strong>
+                                    <div class="table_con">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Item Description / General Description</th>
+                                                    <th width="5px">Unit</th>
+                                                    <th width="7px">Unit Cost</th>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                        <th width="7px"><?php echo $section->short; ?></th>
+                                                    <?php endforeach; ?>
+                                                    <th width="7px">Total Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach(DB::table('table_b')->where('created_by','=','8888')->orderBy('item','ASC')->get() as $item): ?>
+                                                <?php $total = 0; ?>    
+                                                <tr>
+                                                    <td><?php echo $item->item; ?></td>
+                                                    <td><?php echo $item->unit; ?></td>
+                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                    <?php $quantity = DB::table('table_b')
+                                                                                ->where('item','=',$item->item)
+                                                                                ->where('created_by','=',$section->id)
+                                                                                ->first(); ?>
+                                                    <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                    
+                                                        <td><?php echo number_format($quantity->quantity); ?></td>
+                                                        <?php $total += $quantity->quantity; ?>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>     
+                                                    <?php endforeach; ?>
+                                                    <?php if($total): ?>
+                                                        <td><?php echo number_format($total); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>    
+                                                </tr>    
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>    
+                                </li>
+                                <li><strong>c. TRAINING SUPPLIES</strong>
+                                    <div class="table_con">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Item Description / General Description</th>
+                                                    <th width="5px">Unit</th>
+                                                    <th width="7px">Unit Cost</th>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                        <th width="7px"><?php echo $section->short; ?></th>
+                                                    <?php endforeach; ?>
+                                                    <th width="7px">Total Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach(DB::table('table_c')->where('created_by','=','8888')->orderBy('item','ASC')->get() as $item): ?>
+                                                <?php $total = 0; ?>
+                                                <tr>
+                                                    <td><?php echo $item->item; ?></td>
+                                                    <td><?php echo $item->unit; ?></td>
+                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                    <?php $quantity = DB::table('table_c')
+                                                                                ->where('item','=',$item->item)
+                                                                                ->where('created_by','=',$section->id)
+                                                                                ->first(); ?>
+                                                    <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                    
+                                                        <td><?php echo number_format($quantity->quantity); ?></td>
+                                                        <?php $total += $quantity->quantity; ?>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>     
+                                                    <?php endforeach; ?>
+                                                    <?php if($total): ?>
+                                                        <td><?php echo number_format($total); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>        
+                                                </tr>    
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </li>
+                                <li><strong>d. EQUIPMENT CONSUMABLE</strong>
+                                    <div class="table_con">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Item Description / General Description</th>
+                                                    <th width="5px">Unit</th>
+                                                    <th width="7px">Unit Cost</th>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                        <th width="7px"><?php echo $section->short; ?></th>
+                                                    <?php endforeach; ?>
+                                                    <th width="7px">Total Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach(DB::table('table_d')->where('division','=',Auth::user()->division)->groupBy('code')->orderBy('item','ASC')->get() as $item): ?>
+                                                <?php $total = 0; ?>
+                                                <tr>
+                                                    <td><?php echo $item->item; ?></td>
+                                                    <td><?php echo $item->unit; ?></td>
+                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                    <?php $quantity = DB::table('table_d')
+                                                                                ->where('item','=',$item->item)
+                                                                                ->where('created_by','=',$section->id)
+                                                                                ->first(); ?>
+                                                    <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                    
+                                                        <td><?php echo number_format($quantity->quantity); ?></td>
+                                                        <?php $total += $quantity->quantity; ?>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                    <?php if($total): ?>
+                                                        <td><?php echo number_format($total); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>        
+                                                </tr>    
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><strong>2. NON-CONSUMABLE</strong>
+                            <ul>
+                                <li><strong>a. PER SECTION</strong>
+                                    <div class="table_con">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Item Description / General Description</th>
+                                                    <th width="5px">Unit</th>
+                                                    <th width="7px">Unit Cost</th>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                        <th width="7px"><?php echo $section->short; ?></th>
+                                                    <?php endforeach; ?>
+                                                    <th width="7px">Total Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach(DB::table('table_e')->where('created_by','=','8888')->orderBy('item','ASC')->get() as $item): ?>
+                                                <?php $total = 0; ?>
+                                                <tr>
+                                                    <td><?php echo $item->item; ?></td>
+                                                    <td><?php echo $item->unit; ?></td>
+                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                    <?php $quantity = DB::table('table_e')
+                                                                                ->where('item','=',$item->item)
+                                                                                ->where('created_by','=',$section->id)
+                                                                                ->first(); ?>
+                                                    <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                     
+                                                        <td><?php echo number_format($quantity->quantity); ?></td>
+                                                        <?php $total += $quantity->quantity; ?>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>     
+                                                    <?php endforeach; ?>
+                                                    <?php if($total): ?>
+                                                        <td><?php echo number_format($total); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>        
+                                                </tr>    
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>    
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>    
+            
+        <li>
+            <div class="timeline-item">
+                <h3 class="timeline-header"><a href="javascript:void(0)">B. OTHER COMMON-USE OFFICE SUPPLIES SPECIFICALLY USED ONLY BY CONCERNED SECTION (OPEN LIST BY SECTION / PROGRAM)</a></h3>
+                <div class="timeline-body">
+                    <ul>
+                        <li>
+                            <ul>
+                               <div class="table_con">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th width="15%">Item Description / General Description</th>
+                                                <th width="5px">Unit</th>
+                                                <th width="7px">Unit Cost</th>
+                                                <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                    <th width="7px"><?php echo $section->short; ?></th>
+                                                <?php endforeach; ?>
+                                                <th width="7px">Total Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach(DB::table('table_z')->where('division','=',Auth::user()->division)->groupBy('item')->orderBy('item','ASC')->get() as $item): ?>
+                                            <?php $total = 0; ?>
+                                            <tr>
+                                                <td><?php echo $item->item; ?></td>
+                                                <td><?php echo $item->unit; ?></td>
+                                                <td><?php echo number_format($item->amount,2); ?></td>
+                                                <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                <?php $quantity = DB::table('table_z')
+                                                                            ->where('item','=',$item->item)
+                                                                            ->where('created_by','=',$section->id)
+                                                                            ->first(); ?>
+                                                <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                     
+                                                    <td><?php echo number_format($quantity->quantity); ?></td>
+                                                    <?php $total += $quantity->quantity; ?>
+                                                <?php else: ?>
+                                                    <td></td>
+                                                <?php endif; ?>     
+                                                <?php endforeach; ?>
+                                                <?php if($total): ?>
+                                                    <td><?php echo number_format($total); ?></td>
+                                                <?php else: ?>
+                                                    <td></td>
+                                                <?php endif; ?>        
+                                            </tr>    
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li class="time-label">
+            <span class="bg-green">
+                II. SEMI-EXPANDABLE EQUIPMENT AND FURNITURE
+            </span>
+        </li>
+        <li>
+            <div class="timeline-item">
+                <h3 class="timeline-header"><a href="javascript:void(0);">A. COMMON-USE/REGULAR/STANDARD OFFICE/IT/TRAINING EQUIPMENT/FURNITURE</a></h3>
+                <div class="timeline-body">
+                    <ul>
+                        <li>
+                            <ul>
+                                <li><strong>a. PER EMPLOYEE</strong>
+                                    <div class="table_con">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Item Description / General Description</th>
+                                                    <th width="5px">Unit</th>
+                                                    <th width="7px">Unit Cost</th>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                        <th width="7px"><?php echo $section->short; ?></th>
+                                                    <?php endforeach; ?>
+                                                    <th width="7px">Total Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach(DB::table('table_f')->where('created_by','=','8888')->orderBy('item','ASC')->get() as $item): ?>
+                                                <?php $total = 0; ?>
+                                                <tr>
+                                                    <td><?php echo $item->item; ?></td>
+                                                    <td><?php echo $item->unit; ?></td>
+                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                    <?php $quantity = DB::table('table_f')
+                                                                                ->where('item','=',$item->item)
+                                                                                ->where('created_by','=',$section->id)
+                                                                                ->first(); ?>
+                                                    <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                     
+                                                            <td><?php echo number_format($quantity->quantity); ?></td>
+                                                            <?php $total += $quantity->quantity; ?>
+                                                    <?php else: ?>
+                                                            <td></td>
+                                                    <?php endif; ?>     
+                                                    <?php endforeach; ?>
+                                                    <?php if($total): ?>
+                                                        <td><?php echo number_format($total); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>        
+                                                </tr>    
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </li>
+                                <li><strong>b. PER SECTION/DIVISION</strong>
+                                    <div class="table_con">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th width="15%">Item Description / General Description</th>
+                                                    <th width="5px">Unit</th>
+                                                    <th width="7px">Unit Cost</th>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                        <th width="7px"><?php echo $section->short; ?></th>
+                                                    <?php endforeach; ?>
+                                                    <th width="7px">Total Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                
+                                                <?php foreach(DB::table('table_g')->where('created_by','=','8888')->orderBy('item','ASC')->get() as $item): ?>
+                                                <?php $total = 0; ?>
+                                                <tr>
+                                                    <td><?php echo $item->item; ?></td>
+                                                    <td><?php echo $item->unit; ?></td>
+                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                    <?php $quantity = DB::table('table_g')
+                                                                                ->where('item','=',$item->item)
+                                                                                ->where('created_by','=',$section->id)
+                                                                                ->first(); ?>
+                                                    <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                     
+                                                            <td><?php echo number_format($quantity->quantity); ?></td>
+                                                             <?php $total += $quantity->quantity; ?>
+                                                    <?php else: ?>
+                                                            <td></td>
+                                                    <?php endif; ?>     
+                                                    <?php endforeach; ?>
+                                                    <?php if($total): ?>
+                                                        <td><?php echo number_format($total); ?></td>
+                                                    <?php else: ?>
+                                                        <td></td>
+                                                    <?php endif; ?>        
+                                                </tr>    
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>    
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <?php $start = 9; ?>
+        <?php $expense = DB::table('ppmp_code')->where('id','<>','1')->where('id','<>','2')->get(); ?>
+        <?php foreach($expense as $code): ?>
+            <li class="time-label" id="view_code<?php echo $code->id; ?>">
+            <?php if($code->oneline == 0): ?>
+                <span class="bg-green">
+                <?php echo $code->expense_name; ?>
+
+                </span>
+            <?php else: ?>
+                <span style="background-color :#EDBB99;color:white;">
+                <?php echo $code->expense_name; ?>
+
+                </span>
+            <?php endif; ?>
+            </li>
+            <li>
+                <?php if($code->oneline == 0): ?>
+                    <div class="timeline-item">
+                        <div class="timeline-body">
+                            <ul>
+                                <li>
+                                    <ul>
+                                        <li>
+                                            <div class="table_con">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="15%">Item Description / General Description</th>
+                                                            <th width="5px">Unit</th>
+                                                            <th width="7px">Unit Cost</th>
+                                                            <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get(['short']) as $section): ?>
+                                                                <th width="7px"><?php echo $section->short; ?></th>
+                                                            <?php endforeach; ?>
+                                                            <th width="7px">Total Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach(DB::table('open_list')->where('ppcode','=',$code->id)->where('division','=',Auth::user()->division)->groupBy('item')->orderBy('item','ASC')->get() as $item): ?>
+                                                            <?php if($item->item): ?>
+                                                                <?php $total = 0; ?>
+                                                                <tr>
+                                                                    <td><?php echo $item->item; ?></td>
+                                                                    <td><?php echo $item->unit; ?></td>
+                                                                
+                                                                    <td><?php echo number_format($item->amount,2); ?></td>
+                                                                
+                                                                        
+                                                                    <?php foreach(DB::table('section')->where('division','=', Auth::user()->division)->get() as $section): ?>
+                                                                        <?php $quantity = DB::table('open_list')
+                                                                                                    ->where('ppcode','=',$code->id)
+                                                                                                    ->where('item','=',$item->item)
+                                                                                                    ->where('created_by','=',$section->id)
+                                                                                                    ->first(); ?>
+                                                                        <?php if(isset($quantity) AND $quantity->quantity != 0): ?>                     
+                                                                            <td><?php echo number_format($quantity->quantity); ?></td>
+                                                                            <?php $total += $quantity->quantity; ?>
+                                                                        <?php else: ?>
+                                                                            <td></td>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    <?php if($total): ?>
+                                                                        <td><?php echo number_format($total); ?></td>
+                                                                    <?php else: ?>
+                                                                        <td></td>
+                                                                    <?php endif; ?>        
+                                                                </tr>
+                                                            <?php endif; ?>    
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                <?php else: ?>
+                <div class="timeline-item">
+                    <div class="timeline-body">
+                        <ul>
+                            <li>
+                                <ul>
+                                    <li>
+                                        <div id="container<?php echo $code->id; ?>" data-save="<?php echo asset('supply/save/section/open-list'); ?>" data-get="<?php echo asset('supply/get/section/open-list'); ?>" data-expense="<?php echo $code->id; ?>" class="status"></div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <?php
+                    $json = "[";
+                    $count = 1;
+                    $items = DB::table('open_list')
+                            ->where('created_by','=',Auth::user()->division)
+                            ->where('ppcode','=',$code->id)
+                            ->groupBy('item')
+                            ->orderBy('date_added','DESC')
+                            ->where('item','<>','')
+                            ->get(['code','ppcode','item','unit','quantity','amount']);
+                    if($items) {
+                        foreach($items as $item)
+                        {
+                            if($item->item) {
+                                $total = $item->quantity * $item->amount;
+                                $json .= "['" . $item->code ."','".$item->item ."','" . $item->unit ."','" . number_format($item->quantity) . "','" . number_format($item->amount,2) ."','" . number_format($total,2) ."']";
+                                if($count < count($items)) {
+                                    $json.= ",";
+                                }
+                                $count++;
+                            }
+                        }
+                        $json.="]";
+                    } else {
+                        $json .= "['','".$code->expense_name ."','','0','" . number_format(0,2) ."','" . number_format(0,2) ."']";
+                         $json.="]";
+                    }
+                ?>
+                <?php echo $__env->make('division.open_list_js', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <?php endif; ?>
+            </li>
+            <?php if($code->oneline == 0): ?>
+
+                <?php
+                $sections = DB::table('section')->where('division','=',Auth::user()->division)->get();
+                $label = null;
+                ?>
+                <?php $expense_programs = DB::table('program_name')->where('ppcode','=', $code->id)->where('division','=',Auth::user()->division)->count(); ?>
+                <?php if($expense_programs > 0): ?>
+                    <li class="time-label">
+                        <span style="background-color:#737373;color:white;">SECTION PROGRAMS AND OTHER EXPENSES</span>
+                    </li>
+                    <?php foreach($sections as $section): ?>
+                        <?php $label = 'A'; ?>
+                        <?php $program_made = DB::table('program_name')->where('ppcode','=',$code->id)->where('section','=',$section->id)->where('division','=',Auth::user()->division)->get(); ?>
+                            <?php if(count($program_made)): ?>
+                                <li>
+                                    <div class="timeline-item">
+                                        <h3 class="timeline-header"><a href="javascript:void(0);"><?php echo $section->description; ?></a></h3>
+                                        <div class="timeline-body">
+
+                                            <ul>
+                                                <?php foreach($program_made as $program): ?>
+
+                                                    <li><strong> <?php echo $label.")."; ?> <?php echo strtoupper($program->name); ?></strong>
+                                                        <ul>
+                                                            <?php $venues = DB::table('program_training_venue')->where('program_id','=',$program->id)->get(); ?>
+
+                                                            <?php foreach($venues as $venue): ?>
+                                                                <li><span><b><?php echo DB::table('training_venue')->where('id','=',$venue->venue_id)->first()->venue; ?></b></span>
+                                                                    <div class="table_con">
+                                                                        <table>
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th width="35%">Item Description / General Description</th>
+                                                                                <th width="7px">Unit</th>
+                                                                                <th width="7px">Unit Cost</th>
+                                                                                <th width="7px">Quantity</th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            <?php foreach(DB::table('program_items')->where('program_id','=',$venue->program_id)->where('venue_id','=',$venue->venue_id)->get() as $program_item): ?>
+                                                                                <tr>
+                                                                                    <td><?php echo $program_item->item; ?></td>
+                                                                                    <td><center><?php echo $program_item->unit; ?></center></td>
+                                                                                    <td><center><?php echo number_format($program_item->amount,2); ?></center></td>
+                                                                                    <td><center><?php echo number_format($program_item->quantity); ?></center></td>
+                                                                                </tr>
+                                                                            <?php endforeach; ?>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </li>
+                                                            <?php endforeach; ?>
+                                                        </ul>
+                                                    </li>
+                                                    <?php $label++; ?>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        <li>
+            <i class="fa fa-clock-o bg-gray"></i>
+        </li>
+    </ul>
+</section>
+<span data-openlist="<?php echo asset('openlist/forms'); ?>"></span>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('js'); ?>
+    <script>
+        $('.scroll').click(function(){
+            var id = $(this).data('id');
+            document.getElementById('view_code'+id).scrollIntoView();
+        });
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('division.layout.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -1,0 +1,283 @@
+<?php $__env->startSection('content'); ?>
+
+<section class="content" style="padding: 10px;">
+    <ul  style="text-decorration :none;" class="timeline">
+        <li class="time-label">
+            <span class="bg-green">
+                I. OFFICE SUPPLIES
+            </span>
+        </li>
+        <li>
+            <div class="timeline-item">
+                <h3 class="timeline-header"><a href="javascript:void(0);">COMMON-USE/REGULAR/STANDARD OFFICE SUPPLIES</a></h3>
+                <div class="timeline-body">
+                    <ul>
+                        <li><strong>1. CONSUMABLE</strong>
+                            <ul>
+                                <li><strong>a. PER EMPLOYEE</strong>
+                                    <div id="example1" data-save="<?php echo asset('save/table_a'); ?>" data-get="<?php echo asset('get/table_a'); ?>"></div>
+                                </li>
+                                <li><strong>b. PER SECTION</strong>
+                                    <div id="example2" data-save="<?php echo asset('save/table_b'); ?>" data-get="<?php echo asset('get/table_b'); ?>"></div>
+                                </li>
+                                <li><strong>c. TRAINING SUPPLIES</strong>
+                                    <div id="example3" data-save="<?php echo asset('save/table_c'); ?>" data-get="<?php echo asset('get/table_c'); ?>"></div>
+                                </li>
+                                <li><strong>d. EQUIPMENT CONSUMABLE</strong>
+                                    <div id="example4" data-save="<?php echo asset('save/table_d'); ?>" data-get="<?php echo asset('get/table_d'); ?>"></div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><strong>2. NON-CONSUMABLE</strong>
+                            <ul>
+                                <li><strong>a. PER SECTION</strong>
+                                    <div id="example5" data-save="<?php echo asset('save/table_e'); ?>" data-get="<?php echo asset('get/table_e'); ?>"></div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="timeline-item">
+                <h3 class="timeline-header"><a href="javascript:void(0);">B. OTHER COMMON-USE OFFICE SUPPLIES SPECIFICALLY USED ONLY BY CONCERNED SECTION (OPEN LIST BY SECTION / PROGRAM)</a></h3>
+                <div class="timeline-body">
+                    <ul>
+                        <li>
+                            <ul>
+                                <div id="example6"></div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li class="time-label">
+            <span class="bg-green">
+                II. SEMI-EXPANDABLE EQUIPEMENT AND FURNITURE
+            </span>
+        </li>
+        <li>
+            <div class="timeline-item">
+                <h3 class="timeline-header"><a href="javascript:void(0);">A. COMMON-USE/REGULAR/STANDARD OFFICE/IT/TRAINING EQUIPMENT/FURNITURE</a></h3>
+                <div class="timeline-body">
+                    <ul>
+                        <li>
+                            <ul>
+                                <li><strong>a. PER EMPLOYEE</strong>
+                                    <div id="example7" data-save="<?php echo asset('save/table_f'); ?>" data-get="<?php echo asset('get/table_f'); ?>"></div>
+                                </li>
+                                <li><strong>b. PER SECTION/DIVISION</strong>
+                                    <div id="example8" data-save="<?php echo asset('save/table_g'); ?>" data-get="<?php echo asset('get/table_g'); ?>"></div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        
+        <?php $expense = DB::table('ppmp_code')->where('id','<>','1')->where('id','<>','2')->where('oneline','=','1')->get(); ?>
+        <?php foreach($expense as $code): ?>
+            <li class="time-label" id="view_code<?php echo $code->id; ?>">
+            <span class="bg-green">
+               <?php echo $code->expense_name; ?>
+
+            </span>
+            </li>
+            <li>
+                <div class="timeline-item">
+                    <div class="timeline-body">
+                        <ul>
+                            <li>
+                                <ul>
+                                    <li>
+                                        <div id="container<?php echo $code->id; ?>" data-save="<?php echo asset('supply/save/section/open-list'); ?>" data-get="<?php echo asset('supply/get/section/open-list'); ?>" data-expense="<?php echo $code->id; ?>" class="status"></div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <?php
+                    $json = "[";
+                    $count = 1;
+                    $items = DB::table('open_list')
+                            ->where('created_by','=',Auth::user()->section)
+                            ->where('ppcode','=',$code->id)
+                            ->groupBy('item')
+                            ->orderBy('date_added','DESC')
+                            ->where('item','<>','')
+                            ->get(['code','ppcode','item','unit','quantity','amount']);
+                    if($items) {
+                        foreach($items as $item)
+                        {
+                            if($item->item) {
+                                $total = $item->quantity * $item->amount;
+                                $json .= "['" . $item->code ."','".$item->item ."','" . $item->unit ."','" . number_format($item->quantity) . "','" . number_format($item->amount,2) ."','" . number_format($total,2) ."']";
+                                if($count < count($items)) {
+                                    $json.= ",";
+                                }
+                                $count++;
+                            }
+                        }
+                        $json.="]";
+                       // echo "Nag true sa first if count :" .count($items);
+                    } else {
+                        //echo "Nag true sa else";
+                         $items = DB::table('open_list')
+                                    ->where('created_by','=','8888')
+                                    ->where('ppcode','=',$code->id)
+                                    ->groupBy('item')
+                                    ->orderBy('date_added','DESC')
+                                    ->get(['code','ppcode','item','unit','quantity','amount']);
+                        if(count($items) > 0) {           
+                            foreach($items as $item)
+                            {
+                                if($item->item) {
+                                    $total = $item->quantity * $item->amount;
+                                    $json .= "['" . $item->code ."','".$item->item ."','" . $item->unit ."','" . number_format($item->quantity) . "','" . number_format($item->amount,2) ."','" . number_format($total,2) ."']";
+                                    if($count < count($items)) {
+                                        $json.= ",";
+                                    }
+                                    $count++;
+                                }
+                            }
+                            $json.="]";
+                        } else {
+                            $json.="[null,null,null,null,null,null]]";
+                        }
+                    }
+                ?>
+                <script>
+                    var container<?php echo $code->id; ?> = document.getElementById("container<?php echo $code->id; ?>");
+                    var hot<?php echo $code->id; ?>;
+                    
+                    hot<?php echo $code->id; ?> = new Handsontable(container<?php echo $code->id; ?>, {
+                        startRows: 8,
+                        startCols: 4,
+                        rowHeaders: true,
+                        colWidths : [100,450,100,100,200,200],
+                        colHeaders: true,
+                        fillHandle: {
+                            autoInsertRow: false,
+                        },
+                        colHeaders: ['Code','Item Description/ General Specification', 'Unit','Quantity', 'Unit Cost','Total Amount'],
+                        afterChange : function(change,source){
+                            if(source == 'edit') {
+                                var tempdata = this.getData();
+                                var ok = false;
+                                for(var i = 0; i < tempdata.length; i++)
+                                {
+                                    var qty = tempdata[i][3];
+                                    var amt = tempdata[i][4];
+                                    var item = tempdata[i][1];
+                                    var unit = tempdata[i][2];
+
+                                    if(qty) {
+                                        try {
+                                            if(isNaN(parseFloat(qty.replace(/,/g, ''))) == false) {
+                                                ok = true;
+                                                tempdata[i][3] = numberWithCommas(parseFloat(qty.replace(/,/g, '')));
+                                            } else {
+                                                ok = false;
+                                                tempdata[i][3] = null;
+                                                tempdata[i][5] = null;
+                                                //showNotification("alert-danger", "Quantity input is not numeric", "top", "center", null, null);
+                                            }
+                                        }catch(err) {
+                                            ok = false;
+                                            console.log("If qty " + err.message);
+                                        }
+                                    } else {
+                                        console.log("Qty :" + qty);
+                                    }
+
+                                    if(amt) {
+                                        try {
+                                            if(isNaN(parseFloat(amt.replace(/,/g, ''))) == false) {
+                                                ok = true;
+                                                tempdata[i][4] = numberWithCommas(parseFloat(amt.replace(/,/g, '')));
+                                            } else {
+                                                ok = false;
+                                                tempdata[i][4] = null;
+                                                tempdata[i][5] = null;
+                                                //showNotification("alert-danger", "Amount input is not numeric", "top", "center", null, null);
+                                            }
+                                        }catch(err) {
+                                            ok = false;
+                                            console.log("If amt " + err.message);
+                                        }
+                                    } else {
+                                        console.log("Amt :" + amt);
+                                    }
+                                    if(ok)
+                                    {
+                                        try {
+                                            var total = parseFloat(qty.replace(/,/g, '')) * parseFloat(amt.replace(/,/g, ''));
+                                            if(total) {
+                                                tempdata[i][5] = numberWithCommas(total.toFixed(2));
+                                            } else {
+                                                tempdata[i][5] = null;
+                                            }
+                                        }catch(err) {
+                                            console.log("If ok :" + err.message);
+                                        }
+                                    } else {
+                                        console.log('Number errors');
+                                    }
+                                }
+                                this.loadData(tempdata);
+                                if(ok) {
+                                    var url = $("#container<?php echo $code->id; ?>").data('save');
+                                
+                                    var resdata = this.getData();
+                                    for(var i = 0; i < resdata.length; i++) {
+                                        try {
+                                            resdata[i][3] = parseFloat(resdata[i][3].replace(/,/g, ''));
+                                        } catch(err) {
+                                            resdata[i][3] = null;
+                                            console.log("Quantity is empty.");
+                                        }
+                                        try {
+                                            resdata[i][4] = parseFloat(resdata[i][4].replace(/,/g, ''));
+                                        }catch(err) {
+                                            resdata[i][4] = null;
+                                            console.log("Amount is empty.");
+                                        }
+                                    }
+                                    var postdata = {
+                                        data: JSON.stringify(resdata),
+                                        expense : <?php echo $code->id; ?>
+
+                                    };
+                                    $.post(url, postdata, function (res) {
+                                        console.log(res);
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    var items = <?php echo $json; ?>;
+                    hot<?php echo $code->id; ?>.loadData(items);
+                </script>
+            </li>
+        <?php endforeach; ?>
+        <li>
+            <i class="fa fa-clock-o bg-gray"></i>
+        </li>
+    </ul>
+</section>
+<span data-openlist="<?php echo asset('openlist/forms'); ?>"></span>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('js'); ?>
+    <script>
+        $('.scroll').click(function(){
+            var id = $(this).data('id');
+            document.getElementById('code'+id).scrollIntoView();
+        });
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('supply.layout.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

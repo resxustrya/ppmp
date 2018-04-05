@@ -1,0 +1,35 @@
+<nav class="navbar" style="background-color:#00CC99;">
+    <div class="container-fluid">
+        <div class="navbar-header" style="padding:5px;">
+            <a class="navbar-brand">
+                <img style="margin-top:-10px;" src="<?php echo asset('public/asset/images/doh.png'); ?>" height="50" width="50">
+            </a>
+            <P class="navbar-brand">
+                PROJECT PROCUREMENT MANAGEMENT PLAN
+            </P>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="<?php echo asset('ppmp/section'); ?>"><span class="glyphicon glyphicon-floppy-save"></span> <b style="font-weight="bolder;">SAVE</b></a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="glyphicon glyphicon-tasks"></i> EXPENSES<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" style="width: 400px; height: 600px; overflow: auto">
+                        <li><a href="javascript:void(0);" class="scroll" data-id="1"> OFFICE SUPPLIES</a></li>
+                        <?php foreach(DB::table('ppmp_code')->where('id','<>',1)->where('id','<>',2)->get() as $code): ?>
+                            <li><a class="scroll" href="javascript:void(0);" data-id="<?php echo $code->id; ?>"><?php echo $code->expense_name; ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+                <li><a href="<?php echo asset('print/print_plan.php?section='.Auth::user()->section.'&division='.Auth::user()->division); ?>" target="_blank"><i class="glyphicon glyphicon-print"></i> PRINT</a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="glyphicon glyphicon-user"></i> <?php echo strtoupper(DB::table('section')->where('id','=',Auth::user()->section)->first()->short); ?><span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="javascript:void(0);" onclick="get_current_budget(this);" data-link="<?php echo asset('section/current/budget'); ?>">Current Budget</a></li>
+                        <li><a href="javascript:void(0);" onclick="get_current_source_fund(this);" data-link="<?php echo asset('section/current/source-fund'); ?>">Source of Fund</a></li>
+                        <li><a href="<?php echo asset('logout'); ?>">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
